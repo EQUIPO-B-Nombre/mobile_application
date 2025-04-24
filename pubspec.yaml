@@ -91,3 +91,5 @@ flutter:
   assets:
     - assets/logo.png
     - assets/rose_bg.png
+    - assets/calendar.png
+    - assets/list_patients.png

@@ -136,7 +136,7 @@ final class _LoginPageState extends State<LoginPage> {
                               padding: const EdgeInsets.symmetric(vertical: 14),
                             ),
                             onPressed: () {
-                              Navigator.of(context).pushNamed('/home');
+                              Navigator.of(context).pushNamed('/home_doctor');
                             },
                             child: const Text(
                               'Aceptar',

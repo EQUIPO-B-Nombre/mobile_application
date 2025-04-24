@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_application/app/home/home.dart';
 import 'package:mobile_application/app/menu/menu.dart';
+import 'package:mobile_application/app/menu/menu_doctor.dart';
 import 'package:mobile_application/hub/register/register.dart';
+import 'package:mobile_application/app/home/home_doctor.dart';
 
 import 'hub/login/login.dart';
 
@@ -26,6 +28,8 @@ class MyApp extends StatelessWidget {
         '/register': (context) => RegisterPage(),
         '/home': (context) => HomePage(),
         '/menu': (context) => MenuPage(),
+        '/menu_doctor': (context) => MenuDoctorPage(),
+        '/home_doctor': (context) => HomePageDoctor(),
       },
     );
   }
