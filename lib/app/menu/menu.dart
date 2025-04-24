@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_application/app/patient_list/presentation/pages/patient_list.dart';
 
 class MenuPage extends StatelessWidget {
   const MenuPage({super.key});
@@ -86,18 +87,15 @@ class MenuPage extends StatelessWidget {
             ),
             _buildMenuItem(
               icon: Icons.check_box,
-              text: 'Mis consultas',
+              text: 'Pacientes',
               onTap: () {
-
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PatientList()),
+                );
               },
             ),
-            _buildMenuItem(
-              icon: Icons.person,
-              text: 'Perfil',
-              onTap: () {
-
-              },
-            ),
+            _buildMenuItem(icon: Icons.person, text: 'Perfil', onTap: () {}),
             _buildMenuItem(
               icon: Icons.exit_to_app,
               text: 'Cerrar sesión',
