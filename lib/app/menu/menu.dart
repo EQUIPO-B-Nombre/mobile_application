@@ -81,21 +81,21 @@ class MenuPage extends StatelessWidget {
               icon: Icons.home,
               text: 'Página principal',
               onTap: () {
-                // TODO: navegar a home
+                 Navigator.of(context).pushNamed('/home');
               },
             ),
             _buildMenuItem(
               icon: Icons.check_box,
               text: 'Mis consultas',
               onTap: () {
-
+                Navigator.of(context).pushNamed('/medical_list');
               },
             ),
             _buildMenuItem(
               icon: Icons.person,
               text: 'Perfil',
               onTap: () {
-
+                 Navigator.of(context).pushNamed('/profile');
               },
             ),
             _buildMenuItem(

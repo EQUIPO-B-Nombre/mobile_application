@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_application/app/home/home.dart';
+import 'package:mobile_application/app/medical/medical_consultation_list.dart';
 import 'package:mobile_application/app/menu/menu.dart';
 import 'package:mobile_application/app/menu/menu_doctor.dart';
 import 'package:mobile_application/app/profile/profile.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => ProfilePage(),
         '/menu_doctor': (context) => MenuDoctorPage(),
         '/home_doctor': (context) => HomePageDoctor(),
+        '/medical_list': (context) => MedicalConsultationListPage(),
       },
     );
   }
