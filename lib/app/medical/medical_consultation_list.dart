@@ -1,17 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_application/app/profile/data/patient_service.dart';
+import 'package:intl/intl.dart';
 
 class MedicalConsultationListPage extends StatelessWidget {
   const MedicalConsultationListPage({super.key});
 
+  Future<List<Map<String, String>>> _getUpcomingConsultations(String patientId) async {
+    final patientService = PatientService();
+    final patient = await patientService.getPatientById(patientId);
+
+    if (patient == null || patient.appointmentDate == null) {
+      return [];
+    }
+
+    try {
+      // Analizar la fecha con el formato específico
+      final parsedDate = DateFormat("MMM d, yyyy h:mm a").parse(patient.appointmentDate!);
+      print('Parsed Date: $parsedDate'); // Mostrar la fecha analizada en la consola
+
+
+
+      return [
+        {
+          'name': 'Consulta',
+          'date': DateFormat('yyyy-MM-dd').format(parsedDate),
+          'time': DateFormat('hh:mm a').format(parsedDate),
+        }
+      ];
+    } catch (e) {
+      print('Error al analizar la fecha: $e');
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Datos de ejemplo para la tabla
-    final List<Map<String, String>> consultations = [
-      {'name': 'Consulta 1', 'date': '2025-04-01', 'time': '10:00 AM'},
-      {'name': 'Consulta 2', 'date': '2025-04-02', 'time': '11:30 AM'},
-      {'name': 'Consulta 3', 'date': '2025-04-03', 'time': '02:00 PM'},
-      {'name': 'Consulta 4', 'date': '2025-04-04', 'time': '03:15 PM'},
-    ];
+    const patientId = '1'; // Reemplaza '1' con el ID real del paciente
 
     return Scaffold(
       appBar: AppBar(
@@ -38,97 +62,110 @@ class MedicalConsultationListPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(
-                'Mis Consultas',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                constraints: const BoxConstraints(maxWidth: 600),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFE3EC),
-                  border: Border.all(color: const Color(0xFFFFBBCD), width: 2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    showCheckboxColumn: false, // Desactiva la columna de selección
-                    headingRowColor: MaterialStateProperty.all(const Color(0xFFFFC1D6)),
-                    columns: const [
-                      DataColumn(
-                        label: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            'Nombre',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            'Fecha',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            'Hora',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                    rows: consultations.map((consultation) {
-                      return DataRow(
-                        onSelectChanged: (_) => _showConsultationDetails(context, consultation),
-                        cells: [
-                          DataCell(Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(consultation['name']!),
-                          )),
-                          DataCell(Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(consultation['date']!),
-                          )),
-                          DataCell(Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(consultation['time']!),
-                          )),
-                        ],
-                      );
-                    }).toList(),
+      body: FutureBuilder<List<Map<String, String>>>(
+        future: _getUpcomingConsultations(patientId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return const Center(child: Text('Error al cargar las consultas'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No hay próximas consultas disponibles'));
+          }
+
+          final consultations = snapshot.data!;
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Próximas Consultas',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 20),
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 600),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFE3EC),
+                      border: Border.all(color: const Color(0xFFFFBBCD), width: 2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: DataTable(
+                      showCheckboxColumn: false,
+                      headingRowColor: MaterialStateProperty.all(const Color(0xFFFFC1D6)),
+                      columns: const [
+                        DataColumn(
+                          label: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              'Nombre',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              'Fecha',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              'Hora',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                      rows: consultations.map((consultation) {
+                        return DataRow(
+                          onSelectChanged: (_) {
+                            _showConsultationDetails(context, consultation);
+                          },
+                          cells: [
+                            DataCell(Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(consultation['name']!),
+                            )),
+                            DataCell(Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(consultation['date']!),
+                            )),
+                            DataCell(Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(consultation['time']!),
+                            )),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

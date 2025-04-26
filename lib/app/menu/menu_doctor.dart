@@ -95,7 +95,7 @@ class MenuDoctorPage extends StatelessWidget {
               icon: Icons.person,
               text: 'Perfil',
               onTap: () {
-                Navigator.of(context).pushNamed('/profile');
+                Navigator.of(context).pushNamed('/profile_doctor');
               },
             ),
             _buildMenuItem(

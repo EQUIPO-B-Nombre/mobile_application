@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_application/app/home/home.dart';
+import 'package:mobile_application/app/home/home_patient.dart';
 import 'package:mobile_application/app/medical/medical_consultation_list.dart';
 import 'package:mobile_application/app/menu/menu.dart';
 import 'package:mobile_application/app/menu/menu_doctor.dart';
-import 'package:mobile_application/app/profile/profile.dart';
+import 'package:mobile_application/app/profile/presentation/pages/profile_doctor.dart';
+import 'package:mobile_application/app/profile/presentation/pages/profile_patient.dart';
 import 'package:mobile_application/hub/register/register.dart';
 import 'package:mobile_application/app/home/home_doctor.dart';
 
@@ -28,11 +29,12 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/register': (context) => RegisterPage(),
-        '/home': (context) => HomePage(),
+        '/home': (context) => HomePatientPage(),
         '/menu': (context) => MenuPage(),
-        '/profile': (context) => ProfilePage(),
+        '/profile_doctor': (context) => ProfileDoctorPage(),
+        '/profile_patient': (context) => ProfilePatientPage(),
         '/menu_doctor': (context) => MenuDoctorPage(),
-        '/home_doctor': (context) => HomePageDoctor(),
+        '/home_doctor': (context) => HomeDoctorPage(),
         '/medical_list': (context) => MedicalConsultationListPage(),
       },
     );

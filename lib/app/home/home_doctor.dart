@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_application/app/profile/data/doctor_service.dart';
 
-final class HomePageDoctor extends StatelessWidget {
-  const HomePageDoctor({super.key});
+class HomeDoctorPage extends StatelessWidget {
+  const HomeDoctorPage({super.key});
+
+  Future<String> _getDoctorName() async {
+    final doctorService = DoctorService();
+    final doctor = await doctorService.getDoctor('1'); // Reemplaza '1' con el ID real del doctor
+    return doctor?.name ?? 'Doctor';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,50 +40,47 @@ final class HomePageDoctor extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/rose_bg.png'),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Colors.pinkAccent.withAlpha(92),
-                  BlendMode.darken,
-                ),
-              ),
-            ),
+            color: const Color(0xFFFFE3EC), // Fondo completamente rosa
           ),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 32),
-                  const Text(
-                    'Bienvenida, Jane Doe.\n¡Bienvenida a tu Portal de Oncontigo!',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  _DoctorOptionCard(
-                    imagePath: 'assets/list_patients.png',
-                    label: 'LISTA PACIENTES',
-                    onTap: () {
-                      Navigator.of(context).pushNamed('/home');
-                    },
-                  ),
-                  const SizedBox(height: 32),
-                  _DoctorOptionCard(
-                    imagePath: 'assets/calendar.png',
-                    label: 'CALENDARIO',
-                    icon: Icons.calendar_today,
-                    onTap: () {
-                      Navigator.of(context).pushNamed('/calendario');
-                    },
-                  ),
-                ],
+              child: FutureBuilder<String>(
+                future: _getDoctorName(),
+                builder: (context, snapshot) {
+                  final doctorName = snapshot.data ?? 'Doctor';
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 32),
+                      Text(
+                        'Bienvenido, $doctorName.\n¡Bienvenido a tu Portal de Oncontigo!',
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      _DoctorOptionCard(
+                        imagePath: 'assets/list_patients.png',
+                        label: 'LISTA PACIENTES',
+                        onTap: () {
+                          Navigator.of(context).pushNamed('/home');
+                        },
+                      ),
+                      const SizedBox(height: 32),
+                      _DoctorOptionCard(
+                        imagePath: 'assets/calendar.png',
+                        label: 'CALENDARIO',
+                        icon: Icons.calendar_today,
+                        onTap: () {
+                          Navigator.of(context).pushNamed('/calendario');
+                        },
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
@@ -105,7 +109,7 @@ class _DoctorOptionCard extends StatelessWidget {
       onTap: onTap,
       child: Center(
         child: Container(
-          constraints: BoxConstraints(
+          constraints: const BoxConstraints(
             maxWidth: 300,
           ),
           child: Card(
@@ -117,10 +121,10 @@ class _DoctorOptionCard extends StatelessWidget {
             child: Column(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
                   child: Container(
                     width: double.infinity,
-                    constraints: BoxConstraints(maxHeight: 170),
+                    constraints: const BoxConstraints(maxHeight: 170),
                     child: Image.asset(
                       imagePath,
                       fit: BoxFit.cover,
@@ -129,7 +133,7 @@ class _DoctorOptionCard extends StatelessWidget {
                 ),
                 Container(
                   width: double.infinity,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xFF9BBEF9),
                     borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
                   ),
